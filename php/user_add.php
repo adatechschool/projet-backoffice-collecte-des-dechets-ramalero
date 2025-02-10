@@ -77,7 +77,13 @@
         </div>
     </div>
 </div>
-
+<?php
+function addBenevol(){
+$passWord= $_POST['mot_de_passe'];
+echo '$passWord';
+}
+addBenevol()
+?>
 </body>
 </html>
 
