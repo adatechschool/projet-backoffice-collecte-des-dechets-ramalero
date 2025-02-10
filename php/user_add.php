@@ -78,6 +78,13 @@
     </div>
 </div>
 
+<?php
+
+// Se connecter à la base de donnée
+$dbh = new PDO('mysql:host=localhost;dbname=collections');
+
+?>
+
 </body>
 </html>
 
