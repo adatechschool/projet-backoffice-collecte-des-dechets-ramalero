@@ -81,3 +81,37 @@
 </body>
 </html>
 
+<?php
+require 'config.php';
+
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    // Récupérer les valeurs du formulaire
+    $nom = trim($_POST["nom"]);
+    $email = trim($_POST["email"]);
+    $mot_de_passe = password_hash($_POST["mot_de_passe"], PASSWORD_BCRYPT); // Hash du mot de passe
+    $role = $_POST["role"];
+
+    // Vérification si l'email existe déjà
+    $stmt_check = $pdo->prepare("SELECT id FROM benevoles WHERE email = ?");
+    $stmt_check->execute([$email]);
+    
+    if ($stmt_check->rowCount() > 0) {
+        die("Cet email est déjà utilisé par un autre bénévole.");
+    }
+
+    // Insertion dans la base de données
+    $stmt = $pdo->prepare("INSERT INTO benevoles (nom, email, mot_de_passe, role) VALUES (?, ?, ?, ?)");
+    
+    if ($stmt->execute([$nom, $email, $mot_de_passe, $role])) {
+        header("Location: volunteer_list.php"); // Redirection après l'ajout
+        exit;
+    } else {
+        die("Erreur lors de l'insertion du bénévole dans la base de données.");
+    }
+} else {
+    die("Méthode non autorisée.");
+}
+?>
