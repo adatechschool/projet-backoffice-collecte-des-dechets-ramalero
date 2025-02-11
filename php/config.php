@@ -5,8 +5,6 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
-//session_start();
-
 $host = 'localhost';
 $dbname = 'collections';
 $username = 'root';
@@ -22,3 +20,4 @@ try {
     die("Erreur de connexion : " . $e->getMessage());
 }
 ?>
+
