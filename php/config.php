@@ -5,15 +5,8 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
-<<<<<<< HEAD
-//session_start();
-
-$host = 'localhost';
-$dbname = 'collectes';
-=======
 $host = 'localhost';
 $dbname = 'collections';
->>>>>>> marie
 $username = 'root';
 $password = '';
 
