@@ -8,7 +8,7 @@ if (session_status() == PHP_SESSION_NONE) {
 //session_start();
 
 $host = 'localhost';
-$dbname = 'collectes';
+$dbname = 'collections';
 $username = 'root';
 $password = '';
 
