@@ -8,7 +8,7 @@ error_reporting(E_ALL);
 
 try {
     // Récupérer tous les bénévoles
-    $stmt = $pdo->query("SELECT id, nom, email, role FROM benevoles ORDER BY nom ASC");
+    $stmt = $pdo->query("SELECT id, nom, email, role FROM benevoles WHERE role = 'participant' ORDER BY nom ASC");
     $benevoles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     die("Erreur de base de données : " . $e->getMessage());
