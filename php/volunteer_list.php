@@ -7,9 +7,16 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 try {
-    // Récupérer tous les bénévoles
-    $stmt = $pdo->query("SELECT id, nom, email, role FROM benevoles ORDER BY nom ASC");
-    $benevoles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // Récupérer tous les bénévoles et déchets
+    $stmt = $pdo->query("
+    SELECT b.id, b.nom, b.email, b.role, COALESCE(SUM(d.quantite_kg), 0) AS total_dechets
+    FROM benevoles b
+    LEFT JOIN collectes c ON b.id = c.id_benevole
+    LEFT JOIN dechets_collectes d ON c.id = d.id_collecte
+    GROUP BY b.id
+    ORDER BY b.nom ASC
+");
+$benevoles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     die("Erreur de base de données : " . $e->getMessage());
 }
@@ -63,6 +70,7 @@ try {
                     <th class="py-3 px-4 text-left">Email</th>
                     <th class="py-3 px-4 text-left">Rôle</th>
                     <th class="py-3 px-4 text-left">Actions</th>
+                    <th class="py-3 px-4 text-left">Quantité déchets</th>
                 </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-300">
@@ -72,6 +80,7 @@ try {
             <td class="py-3 px-4"><?= htmlspecialchars($benevole['nom']) ?></td>
             <td class="py-3 px-4"><?= htmlspecialchars($benevole['email']) ?></td>
             <td class="py-3 px-4"><?= htmlspecialchars($benevole['role']) ?></td>
+            
             <td class="py-3 px-4 flex space-x-2">
                 <a href="edit_volunteer.php?id=<?= $benevole['id'] ?>" 
                    class="bg-cyan-200 hover:bg-cyan-600 text-white px-4 py-2 rounded-lg shadow-lg">
@@ -81,6 +90,7 @@ try {
                    class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg shadow-lg"
                    onclick="return confirm('Voulez-vous vraiment supprimer ce bénévole ?');">
                     🗑️ Supprimer
+            <td class="py-3 px-4"><?= htmlspecialchars($benevole['total_dechets']) ?> kg</td>
                 </a>
             </td>
         </tr>
