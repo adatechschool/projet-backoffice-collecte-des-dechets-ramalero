@@ -78,11 +78,14 @@
     </div>
 </div>
 
+<<<<<<< HEAD
 <?php
 
 
 ?>
 
+=======
+>>>>>>> addUser
 </body>
 </html>
 

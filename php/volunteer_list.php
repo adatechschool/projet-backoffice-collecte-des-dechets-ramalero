@@ -7,6 +7,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 try {
+<<<<<<< HEAD
     // Récupérer tous les bénévoles et déchets
     $stmt = $pdo->query("
     SELECT b.id, b.nom, b.email, b.role, COALESCE(SUM(d.quantite_kg), 0) AS total_dechets
@@ -17,6 +18,11 @@ try {
     ORDER BY b.nom ASC
 ");
 $benevoles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+=======
+    // Récupérer tous les bénévoles
+    $stmt = $pdo->query("SELECT id, nom, email, role FROM benevoles WHERE role = 'participant' ORDER BY nom ASC");
+    $benevoles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+>>>>>>> addUser
 } catch (PDOException $e) {
     die("Erreur de base de données : " . $e->getMessage());
 }

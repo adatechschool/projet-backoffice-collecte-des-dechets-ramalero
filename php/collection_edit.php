@@ -14,6 +14,11 @@ $stmt = $pdo->prepare("SELECT * FROM collectes WHERE id = ?");
 $stmt->execute([$id]);
 $collecte = $stmt->fetch();
 
+// Récupérer les informations sur les dechets collectés
+$stmt = $pdo->prepare("SELECT * FROM dechets_collectes");
+$stmt->execute();
+$types_dechets = $stmt->fetchAll();
+
 if (!$collecte) {
     header("Location: collection_list.php");
     exit;
@@ -29,9 +34,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $date = $_POST["date"];
     $lieu = $_POST["lieu"];
     $benevole_id = $_POST["benevole"]; // Récupérer l'ID du bénévole sélectionné
+    $type_dechet = $_POST["type_dechet"];
+    $quantite = $_POST["quantite_kg"];
 
     $stmt = $pdo->prepare("UPDATE collectes SET date_collecte = ?, lieu = ?, id_benevole = ? WHERE id = ?");
     $stmt->execute([$date, $lieu, $benevole_id, $id]);
+
+    $stmt = $pdo->prepare("UPDATE dechets_collectes SET  type_dechet = ?, quantite_kg = ? WHERE id = ?");
+    $stmt->execute([$id_collecte, $type_dechet, $quantite]);
 
     header("Location: collection_list.php");
     exit;
@@ -97,6 +107,25 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                             </option>
                         <?php endforeach; ?>
                     </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Types de dechet :</label>
+                    <select name="dechet" required
+                            class="w-full p-2 border border-gray-300 rounded-lg">
+                        <option value="" disabled selected>Sélectionnez un type de dechet</option>
+                        <?php foreach ($types_dechets as $type_dechet): ?>
+                            <option value="<?= $type_dechet['id'] ?>" <?= $type_dechet['id'] == $type_dechet['id_collecte'] ? 'selected' : '' ?>>
+                                <?= htmlspecialchars($type_dechet['type_dechet']) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Quantité de déchets collectés :</label>
+                    <input type="text" name="quantité" value="<?= htmlspecialchars($type_dechet['quantite_kg']) ?>" required
+                           class="w-full p-2 border border-gray-300 rounded-lg">
+                </div>
                 </div>
                 <div class="flex justify-end space-x-4">
                     <a href="collection_list.php" class="bg-gray-500 text-white px-4 py-2 rounded-lg">Annuler</a>
