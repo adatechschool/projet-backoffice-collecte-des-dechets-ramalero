@@ -8,7 +8,6 @@ if (!isset($_GET['id']) || empty($_GET['id'])) {
 }
 
 $id = $_GET['id'];
-
 // Récupérer les informations de la collecte
 $stmt = $pdo->prepare("SELECT * FROM collectes WHERE id = ?");
 $stmt->execute([$id]);
@@ -31,20 +30,21 @@ $benevoles = $stmt_benevoles->fetchAll();
 
 // Mettre à jour la collecte
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    echo "<script>console.log('lalalal');</script>";
     $date = $_POST["date"];
     $lieu = $_POST["lieu"];
     $benevole_id = $_POST["benevole"]; // Récupérer l'ID du bénévole sélectionné
-    $type_dechet = $_POST["type_dechet"];
-    $quantite = $_POST["quantite_kg"];
+    $type_dechet = $_POST["dechet"];
+    $quantite = $_POST["quantite"];
 
     $stmt = $pdo->prepare("UPDATE collectes SET date_collecte = ?, lieu = ?, id_benevole = ? WHERE id = ?");
     $stmt->execute([$date, $lieu, $benevole_id, $id]);
 
     $stmt = $pdo->prepare("UPDATE dechets_collectes SET  type_dechet = ?, quantite_kg = ? WHERE id = ?");
-    $stmt->execute([$id_collecte, $type_dechet, $quantite]);
+    $stmt->execute([$type_dechet, $quantite, $id]);
 
-    header("Location: collection_list.php");
-    exit;
+    //header("Location: collection_list.php");
+    //exit;
 }
 ?>
 
@@ -114,7 +114,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                             class="w-full p-2 border border-gray-300 rounded-lg">
                         <option value="" disabled selected>Sélectionnez un type de dechet</option>
                         <?php foreach ($types_dechets as $type_dechet): ?>
-                            <option value="<?= $type_dechet['id'] ?>" <?= $type_dechet['id'] == $type_dechet['id_collecte'] ? 'selected' : '' ?>>
+                            <option value="<?= $type_dechet['type_dechet'] ?>" <?= $type_dechet['id'] == $type_dechet['id_collecte'] ? 'selected' : '' ?>>
                                 <?= htmlspecialchars($type_dechet['type_dechet']) ?>
                             </option>
                         <?php endforeach; ?>
@@ -123,7 +123,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 <div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Quantité de déchets collectés :</label>
-                    <input type="text" name="quantité" value="<?= htmlspecialchars($type_dechet['quantite_kg']) ?>" required
+                    <input type="text" name="quantite" value="<?= htmlspecialchars($type_dechet['quantite_kg']) ?>" required
                            class="w-full p-2 border border-gray-300 rounded-lg">
                 </div>
                 </div>
