@@ -20,8 +20,11 @@ $benevoles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     die("Erreur de base de données : " . $e->getMessage());
 }
-?>
 
+
+?>
+ 
+ 
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -57,7 +60,8 @@ $benevoles = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
     <!-- Contenu principal -->
     <div class="flex-1 p-8 overflow-y-auto">
-        <h1 class="text-4xl font-bold text-blue-800 mb-6">Ajouter un Bénévole</h1>
+    
+
         <!-- Titre -->
         <h1 class="text-4xl font-bold text-blue-800 mb-6">Liste des Bénévoles</h1>
         <!-- Tableau des bénévoles -->
@@ -81,7 +85,7 @@ $benevoles = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <td class="py-3 px-4"><?= htmlspecialchars($benevole['role']) ?></td>
             
             <td class="py-3 px-4 flex space-x-2">
-                <a href="edit_volunteer.php?id=<?= $benevole['id'] ?>" 
+            <a href="volunteer_edit.php?id=<?= $benevole['id'] ?>" 
                    class="bg-cyan-200 hover:bg-cyan-600 text-white px-4 py-2 rounded-lg shadow-lg">
                     ✏️ Modifier
                 </a>
