@@ -85,13 +85,14 @@ $benevoles = $stmt->fetchAll(PDO::FETCH_ASSOC);
                    class="bg-cyan-200 hover:bg-cyan-600 text-white px-4 py-2 rounded-lg shadow-lg">
                     ✏️ Modifier
                 </a>
-                <a href="delete_volunteer.php?id=<?= $benevole['id'] ?>" 
+                <a href="volunteer_delete.php?id=<?= $benevole['id'] ?>" 
                    class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg shadow-lg"
                    onclick="return confirm('Voulez-vous vraiment supprimer ce bénévole ?');">
                     🗑️ Supprimer
-            <td class="py-3 px-4"><?= htmlspecialchars($benevole['total_dechets']) ?> kg</td>
                 </a>
+                
             </td>
+            <td class="py-3 px-4"><?= htmlspecialchars($benevole['total_dechets']) ?> kg</td>
         </tr>
     <?php endforeach; ?>
 </tbody>
