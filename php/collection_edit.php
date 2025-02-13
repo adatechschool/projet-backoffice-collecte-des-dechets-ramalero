@@ -15,9 +15,11 @@ $stmt->execute([$id]);
 $collecte = $stmt->fetch();
 
 // Récupérer les informations sur les dechets collectés
-$stmt = $pdo->prepare("SELECT * FROM dechets_collectes");
-$stmt->execute();
+$stmt = $pdo->prepare("SELECT * FROM dechets_collectes WHERE id_collecte = ?");
+$stmt->execute([$id]);
 $types_dechets = $stmt->fetchAll();
+$type_dechet = $types_dechets[0] ?? null;
+
 
 if (!$collecte) {
     header("Location: collection_list.php");
@@ -34,14 +36,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $date = $_POST["date"];
     $lieu = $_POST["lieu"];
     $benevole_id = $_POST["benevole"]; // Récupérer l'ID du bénévole sélectionné
-    $type_dechet = $_POST["type_dechet"];
+    $type_dechet = $_POST["dechet"];
     $quantite = $_POST["quantite_kg"];
 
     $stmt = $pdo->prepare("UPDATE collectes SET date_collecte = ?, lieu = ?, id_benevole = ? WHERE id = ?");
     $stmt->execute([$date, $lieu, $benevole_id, $id]);
 
-    $stmt = $pdo->prepare("UPDATE dechets_collectes SET  type_dechet = ?, quantite_kg = ? WHERE id = ?");
-    $stmt->execute([$id_collecte, $type_dechet, $quantite]);
+    $stmt = $pdo->prepare("UPDATE dechets_collectes SET type_dechet = ?, quantite_kg = ? WHERE id_collectes = ?");
+    $stmt->execute([$type_dechet, $quantite, $id]);    
 
     header("Location: collection_list.php");
     exit;
@@ -123,8 +125,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 <div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Quantité de déchets collectés :</label>
-                    <input type="text" name="quantité" value="<?= htmlspecialchars($type_dechet['quantite_kg']) ?>" required
-                           class="w-full p-2 border border-gray-300 rounded-lg">
+                    <input type="text" name="quantité" value="<?= isset($type_dechet['quantite_kg']) ? htmlspecialchars($type_dechet['quantite_kg']) : '' ?>" required>
+
                 </div>
                 </div>
                 <div class="flex justify-end space-x-4">
