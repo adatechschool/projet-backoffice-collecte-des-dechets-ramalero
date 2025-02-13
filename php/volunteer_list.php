@@ -13,8 +13,11 @@ try {
 } catch (PDOException $e) {
     die("Erreur de base de données : " . $e->getMessage());
 }
-?>
 
+
+?>
+ 
+ 
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -51,6 +54,8 @@ try {
 
     <!-- Contenu principal -->
     <div class="flex-1 p-8 overflow-y-auto">
+    
+
         <!-- Titre -->
         <h1 class="text-4xl font-bold text-blue-800 mb-6">Liste des Bénévoles</h1>
 
@@ -73,7 +78,7 @@ try {
             <td class="py-3 px-4"><?= htmlspecialchars($benevole['email']) ?></td>
             <td class="py-3 px-4"><?= htmlspecialchars($benevole['role']) ?></td>
             <td class="py-3 px-4 flex space-x-2">
-                <a href="edit_volunteer.php?id=<?= $benevole['id'] ?>" 
+            <a href="volunteer_edit.php?id=<?= $benevole['id'] ?>" 
                    class="bg-cyan-200 hover:bg-cyan-600 text-white px-4 py-2 rounded-lg shadow-lg">
                     ✏️ Modifier
                 </a>
