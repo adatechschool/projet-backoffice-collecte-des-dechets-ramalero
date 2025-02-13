@@ -78,13 +78,14 @@
     </div>
 </div>
 
+<<<<<<< HEAD
 <?php
 
-// Se connecter à la base de donnée
-$dbh = new PDO('mysql:host=localhost;dbname=collections');
 
 ?>
 
+=======
+>>>>>>> addUser
 </body>
 </html>
 
@@ -112,13 +113,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Insertion dans la base de données
     $stmt = $pdo->prepare("INSERT INTO benevoles (nom, email, mot_de_passe, role) VALUES (?, ?, ?, ?)");
     
-    if ($stmt->execute([$nom, $email, $mot_de_passe, $role])) {
-        header("Location: volunteer_list.php"); // Redirection après l'ajout
-        exit;
-    } else {
+    if (!$stmt->execute([$nom, $email, $mot_de_passe, $role])) {
         die("Erreur lors de l'insertion du bénévole dans la base de données.");
-    }
-} else {
-    die("Méthode non autorisée.");
+        
+    } header("Location: volunteer_list.php"); // Redirection après l'ajout
+    exit;
 }
 ?>
