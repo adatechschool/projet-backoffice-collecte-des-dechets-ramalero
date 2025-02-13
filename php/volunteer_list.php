@@ -55,12 +55,11 @@ $benevoles = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </button>
         </div>
     </div>
-
     <!-- Contenu principal -->
     <div class="flex-1 p-8 overflow-y-auto">
+        <h1 class="text-4xl font-bold text-blue-800 mb-6">Ajouter un Bénévole</h1>
         <!-- Titre -->
         <h1 class="text-4xl font-bold text-blue-800 mb-6">Liste des Bénévoles</h1>
-
         <!-- Tableau des bénévoles -->
         <div class="overflow-hidden rounded-lg shadow-lg bg-white">
             <table class="w-full table-auto border-collapse">
