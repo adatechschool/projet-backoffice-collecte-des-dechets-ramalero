@@ -1,13 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
-</head>
-<body>
-    
-</body>
-</html>
+<?php
+require 'config.php';
+
+if (isset($_GET['id']) && is_numeric($_GET['id'])) {
+    $id = (int) $_GET['id'];
+
+    try {
+        $pdo = new PDO("mysql:host=localhost;dbname=collections", "root", "", [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+        ]);
+
+        $stmt = $pdo->prepare("DELETE FROM benevoles WHERE id = :id");
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+
+        if ($stmt->execute()) {
+            header("Location: volunteer_list.php?success=1");
+            exit();
+        } else {
+            echo "Erreur lors de la suppression.";
+        }
+    } catch (PDOException $e) {
+        die("Erreur: " . $e->getMessage());
+    }
+} else {
+    echo "ID invalide.";
+}
+?>
