@@ -25,6 +25,27 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 ?>
+<!-- MON CODE -->
+<?php
+require 'config.php';
+
+try {
+    $stmt = $pdo->query("
+        SELECT d.id, COALESCE(SUM(d.quantite_kg), 0) AS total_dechets
+        FROM dechets_collectes d
+    ");
+$totalDechets = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+} catch (PDOException $e) {
+    echo "Erreur de base de données : " . $e->getMessage();
+    exit;
+}
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+?>
+
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -84,6 +105,12 @@ error_reporting(E_ALL);
             <div class="bg-white p-6 rounded-lg shadow-lg">
                 <h3 class="text-xl font-semibold text-gray-800 mb-3">Bénévole Admin</h3>
                 <p class="text-lg text-gray-600"><?= $adminNom ?></p>
+            </div>
+            <!-- MON CODE -->
+             <div class="bg-white p-6 rounded-lg shadow-lg">
+                <h3 class="text-xl font-semibold text-gray-800 mb-3">Total des Dechets Collectés</h3>
+                <p class="text-3xl font-bold text-blue-600"><?= htmlspecialchars($totalDechets[0]['total_dechets'] ?? 0) ?> kg</p>
+
             </div>
         </div>
 
