@@ -31,19 +31,11 @@ require 'config.php';
 
 try {
     $stmt = $pdo->query("
-        SELECT c.id_collecte
-        FROM dechets_collectes c
+        SELECT d.id, COALESCE(SUM(d.quantite_kg), 0) AS total_dechets
+        FROM dechets_collectes d
     ");
-
-    $query = $pdo->prepare("SELECT nom FROM benevoles WHERE role = 'admin' LIMIT 1");
-    $query->execute();
-
-    $dechets_collectes = $stmt->fetchAll();
-    $admin = $query->fetch(PDO::FETCH_ASSOC);
-    $adminNom = $admin ? htmlspecialchars($admin['nom']) : 'Aucun administrateur trouvé';
-
+$totalDechets = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
-
 } catch (PDOException $e) {
     echo "Erreur de base de données : " . $e->getMessage();
     exit;
@@ -117,7 +109,8 @@ error_reporting(E_ALL);
             <!-- MON CODE -->
              <div class="bg-white p-6 rounded-lg shadow-lg">
                 <h3 class="text-xl font-semibold text-gray-800 mb-3">Total des Dechets Collectés</h3>
-                <p class="text-3xl font-bold text-blue-600"><?= count($dechets_collectes) ?></p>
+                <p class="text-3xl font-bold text-blue-600"><?= htmlspecialchars($totalDechets[0]['total_dechets'] ?? 0) ?> kg</p>
+
             </div>
         </div>
 
