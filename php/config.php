@@ -8,7 +8,7 @@ if (session_status() == PHP_SESSION_NONE) {
 $host = 'localhost';
 $dbname = 'collections';
 $username = 'root';
-$password = 'root';
+$password = '';
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $username, $password, [
