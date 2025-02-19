@@ -1,4 +1,5 @@
 <?php
+include 'session_check.php';
 require 'config.php';
 
 // Activer l'affichage des erreurs pour le débogage

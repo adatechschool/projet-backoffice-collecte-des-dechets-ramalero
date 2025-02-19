@@ -1,4 +1,5 @@
 <?php
+include 'session_check.php';
 require 'config.php';
 
 ini_set('display_errors', 1);

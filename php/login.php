@@ -2,9 +2,10 @@
 session_start(); // Démarrer la session
 require 'config.php';
 
+
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $email = $_POST["email"];
-    $password = $_POST["password"];
+    password_hash($password = $_POST["password"], PASSWORD_BCRYPT);
 
     // Vérifier si l'utilisateur existe dans la table `benevoles`
     $stmt = $pdo->prepare("SELECT * FROM benevoles WHERE email = ?");
@@ -17,6 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $_SESSION["nom"] = $user["nom"];
         $_SESSION["role"] = $user["role"];
 
+        $_SESSION['email'] = true;
         header("Location: collection_list.php");
         exit;
     } else {
