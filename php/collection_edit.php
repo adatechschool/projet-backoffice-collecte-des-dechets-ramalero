@@ -33,55 +33,46 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     echo "<script>console.log('lalalal');</script>";
     $date = $_POST["date"];
     $lieu = $_POST["lieu"];
-<<<<<<< HEAD
     $benevole_id = $_POST["benevole"]; // Récupérer l'ID du bénévole sélectionné
     $type_dechet = $_POST["dechet"];
     $quantite = $_POST["quantite"];
-=======
-    $benevole_id = $_POST["benevole"]; // Récupérer l'ID du bénévole sélectionn
->>>>>>> 230c5c768be304fde790071dbc256caf69af314a
 
     $stmt = $pdo->prepare("UPDATE collectes SET date_collecte = ?, lieu = ?, id_benevole = ? WHERE id = ?");
     $stmt->execute([$date, $lieu, $benevole_id, $id]);
 
-<<<<<<< HEAD
-    $stmt = $pdo->prepare("UPDATE dechets_collectes SET  type_dechet = ?, quantite_kg = ? WHERE id = ?");
+    $stmt = $pdo->prepare("UPDATE dechets_collectes SET type_dechet = ?, quantite_kg = ? WHERE id = ?");
     $stmt->execute([$type_dechet, $quantite, $id]);
 
-    //header("Location: collection_list.php");
-    //exit;
-=======
     header("Location: collection_list.php");
     exit;
 }
 
-// Mettre à jour les dechets collectés
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $id_collecte = $_POST["id_collecte"];
-    $type_dechet = $_POST["type_dechet"];
-    $quantite = $_POST["quantite"];
+// // Mettre à jour les dechets collectés
+// if ($_SERVER["REQUEST_METHOD"] === "POST") {
+//     $id_collecte = $_POST["id_collecte"];
+//     $type_dechet = $_POST["type_dechet"];
+//     $quantite = $_POST["quantite"];
 
-    try {
-        // $stmt = $pdo->prepare("UPDATE dechets_collectes SET type_dechet = ?, quantite_kg = ? WHERE id_collecte = ?");
-        // $stmt->execute([$type_dechet, $quantite, $id_collecte]);
+//     try {
+//         // $stmt = $pdo->prepare("UPDATE dechets_collectes SET type_dechet = ?, quantite_kg = ? WHERE id_collecte = ?");
+//         // $stmt->execute([$type_dechet, $quantite, $id_collecte]);
 
-        $stmt = $pdo->prepare("INSERT INTO dechets_collectes (type_dechet, quantite_kg, id_collecte) VALUES (?, ?, ?)");
-        $stmt->execute([$type_dechet, $quantite, $id_collecte]);
+//         $stmt = $pdo->prepare("INSERT INTO dechets_collectes (type_dechet, quantite_kg, id_collecte) VALUES (?, ?, ?)");
+//         $stmt->execute([$type_dechet, $quantite, $id_collecte]);
 
-    if ($stmt->rowCount() > 0) {
-        echo "Mise à jour réussie!";
-    } else {
-        echo "Aucune ligne mise à jour. Vérifiez que l'ID est correct.";
-    }
+//     if ($stmt->rowCount() > 0) {
+//         echo "Mise à jour réussie!";
+//     } else {
+//         echo "Aucune ligne mise à jour. Vérifiez que l'ID est correct.";
+//     }
 
-    header("Location: collection_list.php");
-    exit;
-    } catch (PDOException $e){
-        echo "Erreur lors de la mise à jour: ". $e->getMessage();
-    };
+//     header("Location: collection_list.php");
+//     exit;
+//     } catch (PDOException $e){
+//         echo "Erreur lors de la mise à jour: ". $e->getMessage();
+//     };
     
->>>>>>> 230c5c768be304fde790071dbc256caf69af314a
-}
+// }
 ?>
 
 <!DOCTYPE html>
@@ -145,18 +136,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     </select>
                 </div>
                 <div>
-<<<<<<< HEAD
-                    <label class="block text-sm font-medium text-gray-700">Types de dechet :</label>
-                    <select name="dechet" required
-                            class="w-full p-2 border border-gray-300 rounded-lg">
-                        <option value="" disabled selected>Sélectionnez un type de dechet</option>
-                        <?php foreach ($types_dechets as $type_dechet): ?>
-                            <option value="<?= $type_dechet['type_dechet'] ?>" <?= $type_dechet['id'] == $type_dechet['id_collecte'] ? 'selected' : '' ?>>
-                                <?= htmlspecialchars($type_dechet['type_dechet']) ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-=======
                     <?php foreach ($types_dechets as $type_dechet): ?>
                         <label class="block text-sm font-medium text-gray-700">Types de dechet :</label>
                         <input type="text" name="existing_dechet" class="p-1 border border-gray-300 rounded-lg" value="<?= $type_dechet['type_dechet'] ?>" <?= $type_dechet['id'] == $type_dechet['id_collecte'] ? 'selected' : '' ?>>
@@ -168,21 +147,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         </input>
                     <?php endforeach; ?>
                  
->>>>>>> 230c5c768be304fde790071dbc256caf69af314a
                 </div>
                 <div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Quantité de déchets collectés :</label>
-<<<<<<< HEAD
-                    <input type="text" name="quantite" value="<?= htmlspecialchars($type_dechet['quantite_kg']) ?>" required
-                           class="w-full p-2 border border-gray-300 rounded-lg">
-=======
                     <input type="number" name="quantite" value="" required
                         class="w-full p-2 border border-gray-300 rounded-lg">
                     <label class="block text-sm font-medium text-gray-700">type de dechet :</label>
                     <input type="text" name="type_dechet" value="" required
                         class="w-full p-2 border border-gray-300 rounded-lg">
->>>>>>> 230c5c768be304fde790071dbc256caf69af314a
                 </div>
                 </div>
                 <div class="flex justify-end space-x-4">
