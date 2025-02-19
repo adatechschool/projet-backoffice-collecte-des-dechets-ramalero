@@ -13,6 +13,7 @@ try {
 } catch (PDOException $e) {
     die("Erreur de base de données : " . $e->getMessage());
 }
+
 ?>
 
 <!DOCTYPE html>
