@@ -4,7 +4,7 @@ require 'config.php';
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $email = $_POST["email"];
-    $password = $_POST["password"];
+    password_hash($password = $_POST["password"], PASSWORD_BCRYPT);
 
     // Vérifier si l'utilisateur existe dans la table `benevoles`
     $stmt = $pdo->prepare("SELECT * FROM benevoles WHERE email = ?");

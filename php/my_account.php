@@ -28,7 +28,7 @@
                         class="fas fa-cogs mr-3"></i>Perso</a></li>
 
         <div class="mt-6">
-            <button onclick="logout()" class="w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded-lg shadow-md">
+            <button onclick="window.location.href='logout.php'" class="w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded-lg shadow-md">
                 Déconnexion
             </button>
         </div>
