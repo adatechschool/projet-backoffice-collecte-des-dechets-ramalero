@@ -31,7 +31,7 @@ require 'config.php';
 
 try {
     $stmt = $pdo->query("
-        SELECT d.id, COALESCE(SUM(d.quantite_kg), 0) AS total_dechets
+        SELECT d.id, ROUND(COALESCE(SUM(d.quantite_kg), 0)) AS total_dechets
         FROM dechets_collectes d
     ");
 $totalDechets = $stmt->fetchAll(PDO::FETCH_ASSOC);

@@ -9,7 +9,7 @@ error_reporting(E_ALL);
 try {
     // Récupérer tous les bénévoles et déchets
     $stmt = $pdo->query("
-    SELECT b.id, b.nom, b.email, b.role, COALESCE(SUM(d.quantite_kg), 0) AS total_dechets
+    SELECT b.id, b.nom, b.email, b.role, ROUND(COALESCE(SUM(d.quantite_kg), 0)) AS total_dechets
     FROM benevoles b
     LEFT JOIN collectes c ON b.id = c.id_benevole
     LEFT JOIN dechets_collectes d ON c.id = d.id_collecte
