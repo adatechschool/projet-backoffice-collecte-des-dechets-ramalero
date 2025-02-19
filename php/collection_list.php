@@ -109,7 +109,7 @@ error_reporting(E_ALL);
             <!-- MON CODE -->
              <div class="bg-white p-6 rounded-lg shadow-lg">
                 <h3 class="text-xl font-semibold text-gray-800 mb-3">Total des Dechets Collectés</h3>
-                <p class="text-3xl font-bold text-blue-600"><?= htmlspecialchars($totalDechets[0]['total_dechets'] ?? 0) ?> kg</p>
+                <p class="text-3xl font-bold text-blue-600"><?= htmlspecialchars(number_format($totalDechets[0]['total_dechets'] ?? 0)) ?> kg</p>
 
             </div>
         </div>
