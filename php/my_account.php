@@ -1,3 +1,13 @@
+<?php
+require 'config.php';
+
+if(!isset($_GET['id']) || empty($_GET['id'])){
+    header("Location: admin_list.php");
+    exit;
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
