@@ -1,5 +1,5 @@
 <?php
-//include 'session_check.php';
+include 'session_check.php';
 require 'config.php';
 
 try {

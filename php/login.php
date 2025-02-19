@@ -2,6 +2,7 @@
 session_start(); // Démarrer la session
 require 'config.php';
 
+
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $email = $_POST["email"];
     password_hash($password = $_POST["password"], PASSWORD_BCRYPT);
@@ -17,6 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $_SESSION["nom"] = $user["nom"];
         $_SESSION["role"] = $user["role"];
 
+        $_SESSION['email'] = true;
         header("Location: collection_list.php");
         exit;
     } else {
