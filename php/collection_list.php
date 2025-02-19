@@ -24,7 +24,68 @@ try {
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+
+
+try {
+    $pdo = new PDO("mysql:host=localhost;dbname=collections", "root", "", [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+    ]);
+
+    // Récupérer le total des déchets collectés
+    $stmt = $pdo->query("SELECT SUM(quantite_kg) AS total_dechets FROM dechets_collectes");
+    $total_dechets = $stmt->fetch(PDO::FETCH_ASSOC)['total_dechets'];
+
+    // Récupérer les types de déchets avec leur quantité
+    $stmt = $pdo->query("SELECT type_dechet, SUM(quantite_kg) AS total FROM dechets_collectes GROUP BY type_dechet");
+    $types_dechets = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Récupérer les quantités collectées par mois
+    $stmt = $pdo->query("SELECT DATE_FORMAT(date_collecte, '%Y-%m') AS mois, SUM(quantite_kg) AS total FROM collectes 
+                         JOIN dechets_collectes ON collectes.id = dechets_collectes.id_collecte
+                         GROUP BY mois ORDER BY mois");
+    $dechets_par_mois = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+} catch (PDOException $e) {
+    die("Erreur: " . $e->getMessage());
+}
+
+// Initialisation des filtres
+$date_debut = $_GET['date_debut'] ?? '';
+$date_fin = $_GET['date_fin'] ?? '';
+$type_dechet = $_GET['type_dechet'] ?? '';
+
+// Construction de la requête SQL avec filtres dynamiques
+$whereClause = " WHERE 1=1";
+$params = [];
+
+if (!empty($date_debut) && !empty($date_fin)) {
+    $whereClause .= " AND date_collecte BETWEEN ? AND ?";
+    $params[] = $date_debut;
+    $params[] = $date_fin;
+}
+
+if (!empty($type_dechet)) {
+    $whereClause .= " AND type_dechet = ?";
+    $params[] = $type_dechet;
+}
+
+// Récupérer les données filtrées pour le graphique en camembert
+$stmt = $pdo->prepare("SELECT type_dechet, SUM(quantite_kg) AS total 
+                       FROM dechets_collectes 
+                       JOIN collectes ON collectes.id = dechets_collectes.id_collecte
+                       $whereClause GROUP BY type_dechet");
+$stmt->execute($params);
+$types_dechets = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Récupérer les données filtrées pour l'évolution des déchets par mois
+$stmt = $pdo->prepare("SELECT DATE_FORMAT(date_collecte, '%Y-%m') AS mois, SUM(quantite_kg) AS total 
+                       FROM collectes 
+                       JOIN dechets_collectes ON collectes.id = dechets_collectes.id_collecte
+                       $whereClause GROUP BY mois ORDER BY mois");
+$stmt->execute($params);
+$dechets_par_mois = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
+
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -36,6 +97,7 @@ error_reporting(E_ALL);
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Lora:wght@400;700&family=Montserrat:wght@300;400;700&family=Open+Sans:wght@300;400;700&family=Poppins:wght@300;400;700&family=Playfair+Display:wght@400;700&family=Raleway:wght@300;400;700&family=Nunito:wght@300;400;700&family=Merriweather:wght@300;400;700&family=Oswald:wght@300;400;700&display=swap" rel="stylesheet">
     </head>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-100 text-gray-900">
@@ -87,6 +149,40 @@ error_reporting(E_ALL);
             </div>
         </div>
 
+        <h1 class="text-3xl font-bold text-center text-blue-900 mb-6">Tableau de Bord des Collectes</h1>
+
+<!-- Formulaire de filtre -->
+<form method="GET" class="mb-6 flex justify-center space-x-4">
+    <input type="date" name="date_debut" class="border p-2 rounded" value="<?= htmlspecialchars($date_debut) ?>">
+    <input type="date" name="date_fin" class="border p-2 rounded" value="<?= htmlspecialchars($date_fin) ?>">
+    
+    <select name="type_dechet" class="border p-2 rounded">
+        <option value="">Tous les types</option>
+        <?php
+        $stmt = $pdo->query("SELECT DISTINCT type_dechet FROM dechets_collectes");
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $selected = ($type_dechet == $row['type_dechet']) ? 'selected' : '';
+            echo "<option value='" . htmlspecialchars($row['type_dechet']) . "' $selected>" . htmlspecialchars($row['type_dechet']) . "</option>";
+        }
+        ?>
+    </select>
+
+    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Filtrer</button>
+</form>
+
+<!-- Conteneur des graphiques -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="bg-white p-6 rounded-lg shadow">
+        <h2 class="text-xl font-bold text-center">Répartition des types de déchets</h2>
+        <canvas id="dechetsChart"></canvas>
+    </div>
+    <div class="bg-white p-6 rounded-lg shadow">
+        <h2 class="text-xl font-bold text-center">Évolution des déchets collectés</h2>
+        <canvas id="evolutionChart"></canvas>
+    </div>
+</div>
+
+
         <!-- Tableau des collectes -->
         <div class="overflow-hidden rounded-lg shadow-lg bg-white">
             <table class="w-full table-auto border-collapse">
@@ -121,5 +217,40 @@ error_reporting(E_ALL);
         </div>
     </div>
 </div>
+<script>
+// Graphique des types de déchets
+        const labelsTypes = <?= json_encode(array_column($types_dechets, 'type_dechet')) ?>;
+        const dataTypes = <?= json_encode(array_column($types_dechets, 'total')) ?>;
+
+        new Chart(document.getElementById('dechetsChart'), {
+            type: 'pie',
+            data: {
+                labels: labelsTypes,
+                datasets: [{
+                    label: 'Répartition des déchets',
+                    data: dataTypes,
+                    backgroundColor: ['#ff6384', '#36a2eb', '#ffce56', '#4bc0c0', '#9966ff'],
+                }]
+            }
+        });
+
+        // Graphique de l'évolution des déchets
+        const labelsMois = <?= json_encode(array_column($dechets_par_mois, 'mois')) ?>;
+        const dataMois = <?= json_encode(array_column($dechets_par_mois, 'total')) ?>;
+
+        new Chart(document.getElementById('evolutionChart'), {
+            type: 'line',
+            data: {
+                labels: labelsMois,
+                datasets: [{
+                    label: 'Évolution des déchets collectés',
+                    data: dataMois,
+                    borderColor: '#36a2eb',
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    fill: true
+                }]
+            }
+        });
+</script>
 </body>
 </html>
