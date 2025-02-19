@@ -22,16 +22,15 @@ if(!isset($_GET['id']) || empty($_GET['id'])){
 <div class="flex h-screen">
 
     <!-- Barre de navigation -->
-    <div class="bg-cyan-200 text-112A46 w-64 p-6">
-        <h2 class="text-2xl font-bold mb-6">Dashboard</h2>
-        <li><a href="collection_list.php" class="flex items-center py-2 px-3 hover:bg-blue-91B9E4 rounded-lg"><i class="fas fa-tachometer-alt mr-3"></i> Tableau de bord</a></li>
-            <li><a href="collection_add.php" class="flex items-center py-2 px-3 hover:bg-blue-800 rounded-lg"><i class="fas fa-plus-circle mr-3"></i> Ajouter une collecte</a></li>
-            <li><a href="volunteer_list.php" class="flex items-center py-2 px-3 hover:bg-blue-800 rounded-lg"><i class="fa-solid fa-list mr-3"></i> Liste des bénévoles</a></li>
-            <li><a href="user_add.php" class="flex items-center py-2 px-3 hover:bg-blue-800 rounded-lg"><i class="fas fa-user-plus mr-3"></i> Ajouter un bénévole</a></li>
-            <li><a href="my_account.php" class="flex items-center py-2 px-3 hover:bg-blue-800 rounded-lg"><i class="fas fa-cogs mr-3"></i> Mon compte</a></li>
-       
-        <div class="mt-6">
-            <button onclick="window.location.href='logout.php'" class="w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded-lg shadow-md">
+   <div class="bg-[#80DDB2] text-[#233B3D] w-64 p-6">
+  <h2 class="text-2xl font-bold mb-6">Dashboard</h2>
+  <li><a href="collection_list.php" class="flex items-center py-2 px-3 hover:bg-blue-91B9E4 rounded-lg"><i class="fas fa-tachometer-alt mr-3"></i> Tableau de bord</a></li>
+  <li><a href="collection_add.php" class="flex items-center py-2 px-3 hover:bg-blue-800 rounded-lg"><i class="fas fa-plus-circle mr-3"></i> Ajouter une collecte</a></li>
+  <li><a href="volunteer_list.php" class="flex items-center py-2 px-3 hover:bg-blue-800 rounded-lg"><i class="fa-solid fa-list mr-3"></i> Liste des bénévoles</a></li>
+  <li><a href="user_add.php" class="flex items-center py-2 px-3 hover:bg-blue-800 rounded-lg"><i class="fas fa-user-plus mr-3"></i> Ajouter un bénévole</a></li>
+  <li><a href="my_account.php" class="flex items-center py-2 px-3 hover:bg-blue-800 rounded-lg"><i class="fas fa-cogs mr-3"></i> Mon compte</a></li>
+<div class="mt-6">
+            <button onclick="logout()" class="w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded-lg shadow-md">
                 Déconnexion
             </button>
         </div>
@@ -40,7 +39,7 @@ if(!isset($_GET['id']) || empty($_GET['id'])){
     <!-- Contenu principal -->
     <div class="flex-1 p-8 overflow-y-auto">
         <!-- Titre -->
-        <h1 class="text-4xl font-bold text-blue-800 mb-6">Paramètres</h1>
+        <h1 class="text-4xl font-bold text-[#233B3D] mb-6">Paramètres</h1>
 
         <!-- Message de succès ou d'erreur -->
         <div class="text-green-600 text-center mb-4" id="success-message" style="display:none;">
