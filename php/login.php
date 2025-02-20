@@ -3,6 +3,12 @@ session_start(); // Démarrer la session
 require 'config.php';
 
 
+$password = "123456"; // Change le mot de passe ici
+$hash = password_hash($password, PASSWORD_DEFAULT);
+
+echo "Mot de passe hashé : " . $hash;
+
+
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $email = $_POST["email"];
     password_hash($password = $_POST["password"], PASSWORD_BCRYPT);
